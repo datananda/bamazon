@@ -1,0 +1,30 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "University of Minnesota Coding Bootcamp - Week 12 HW Assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madeloux/bamazon.git"
+  },
+  "keywords": [],
+  "author": "Madeleine Filloux <mfilloux@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/madeloux/bamazon/issues"
+  },
+  "homepage": "https://github.com/madeloux/bamazon#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "inquirer": "^5.2.0",
+    "mysql": "^2.15.0"
+  }
+}
