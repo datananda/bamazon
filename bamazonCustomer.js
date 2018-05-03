@@ -16,7 +16,28 @@ const productTable = new Table({
     colWidths: [5, 40, 10],
 });
 
-function promptForNumUnits(product) {
+function buyProduct(id, numUnits) {
+    connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [numUnits, id], (err, res) => {
+        console.log(res);
+    });
+}
+
+function checkProductAvailability(id, numUnits) {
+    connection.query("SELECT product_name, stock_quantity FROM products WHERE item_id = ?", [id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        const availableUnits = res[0].stock_quantity;
+        if (availableUnits >= numUnits) {
+            console.log("you bought it!");
+            buyProduct(id, numUnits);
+        } else {
+            console.log(`Sorry. There are only ${availableUnits} units of ${res[0].product_name} available for sale.`);
+            connection.end();
+        }
+    });
+}
+
+function promptForNumUnits(id, product) {
     inquirer.prompt([
         {
             type: "input",
@@ -24,7 +45,13 @@ function promptForNumUnits(product) {
             name: "numUnitsChoice",
         },
     ]).then((response) => {
-        console.log(response);
+        if (/^[1-9]\d*$/.test(response.numUnitsChoice)) {
+            const numUnits = parseInt(response.numUnitsChoice, 10);
+            checkProductAvailability(id, numUnits);
+        } else {
+            console.log("\nPlease enter a number greater than zero.");
+            promptForNumUnits(id, product);
+        }
     });
 }
 
@@ -32,7 +59,7 @@ function checkForProduct(id) {
     connection.query("SELECT product_name FROM products WHERE item_id = ?", [id], (err, res) => {
         if (err) throw err;
         if (res.length > 0) {
-            promptForNumUnits(res[0].product);
+            promptForNumUnits(id, res[0].product_name);
         } else {
             console.log("\nThat is not a valid product ID. Please try again.");
             promptForID();
