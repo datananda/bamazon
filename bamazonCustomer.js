@@ -18,18 +18,19 @@ const productTable = new Table({
 
 function buyProduct(id, numUnits) {
     connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [numUnits, id], (err, res) => {
-        console.log(res);
+        if (err) throw err;
     });
 }
 
 function checkProductAvailability(id, numUnits) {
-    connection.query("SELECT product_name, stock_quantity FROM products WHERE item_id = ?", [id], (err, res) => {
+    connection.query("SELECT product_name, price, stock_quantity FROM products WHERE item_id = ?", [id], (err, res) => {
         if (err) throw err;
-        console.log(res);
         const availableUnits = res[0].stock_quantity;
         if (availableUnits >= numUnits) {
-            console.log("you bought it!");
+            const cost = numUnits * res[0].price;
+            console.log(`You bought ${numUnits} units of ${res[0].product_name} for a total of $${cost}.`);
             buyProduct(id, numUnits);
+            connection.end();
         } else {
             console.log(`Sorry. There are only ${availableUnits} units of ${res[0].product_name} available for sale.`);
             connection.end();
