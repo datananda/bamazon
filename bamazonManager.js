@@ -1,40 +1,12 @@
-require("dotenv").config();
 const inquirer = require("inquirer");
-const mysql = require("mysql");
 const Table = require("cli-table");
-
-const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: process.env.MYSQL_PASSWORD,
-    database: "bamazon",
-});
+const connection = require("./connection");
+const validation = require("./validation");
 
 const productTable = new Table({
     head: ["ID", "PRODUCT NAME", "PRICE", "STOCK"],
     colWidths: [5, 40, 10, 10],
 });
-
-function validateNumUnits(units) {
-    if (/^[1-9]\d*$/.test(units)) {
-        return true;
-    }
-    return "Please enter a number greater than zero.";
-}
-
-function validateID(id) {
-    return new Promise((resolve, reject) => {
-        connection.query("SELECT product_name FROM products WHERE item_id = ?", [id], (err, res) => {
-            if (err) throw err;
-            if (res.length > 0) {
-                resolve(true);
-            } else {
-                reject("Please enter a valid product id.");
-            }
-        });
-    });
-}
 
 function validatePrice(price) {
     const priceFloat = parseFloat(price);
@@ -60,7 +32,7 @@ function newPrompt() {
         {
             type: "input",
             message: "What is the name of the product you would like to add?",
-            name: "productName",
+            name: "name",
             validate: input => input !== "",
         },
         {
@@ -79,11 +51,10 @@ function newPrompt() {
             type: "input",
             message: "What is the stock quantity of the new product?",
             name: "stock",
-            validate: validateNumUnits,
-            filter: val => parseInt(val, 10),
+            validate: validation.integerGreaterThanZero,
         },
     ]).then((response) => {
-        addProduct(response.productName, response.deptName, response.price, response.stock);
+        addProduct(response.name, response.deptName, response.price, parseInt(response.stock, 10));
     });
 }
 
@@ -101,17 +72,16 @@ function addPrompt() {
             type: "input",
             message: "What is the ID of the product you would like to add stock to?",
             name: "productID",
-            validate: validateID,
+            validate: validation.validProductID,
         },
         {
             type: "input",
             message: "How many units are you adding to stock?",
             name: "addUnits",
-            validate: validateNumUnits,
-            filter: val => parseInt(val, 10),
+            validate: validation.integerGreaterThanZero,
         },
     ]).then((response) => {
-        addInventory(response.productID, response.addUnits);
+        addInventory(response.productID, parseInt(response.addUnits, 10));
     });
 }
 

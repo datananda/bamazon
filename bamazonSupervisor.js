@@ -1,27 +1,12 @@
-require("dotenv").config();
 const inquirer = require("inquirer");
-const mysql = require("mysql");
 const Table = require("cli-table");
-
-const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: process.env.MYSQL_PASSWORD,
-    database: "bamazon",
-});
+const connection = require("./connection");
+const validation = require("./validation");
 
 const departmentTable = new Table({
     head: ["ID", "DEPARTMENT NAME", "OVERHEAD COSTS", "PRODUCT SALES", "TOTAL PROFIT"],
     colWidths: [5, 40, 16, 15, 14],
 });
-
-function validateNumUnits(units) {
-    if (/^[1-9]\d*$/.test(units)) {
-        return true;
-    }
-    return "Please enter a number greater than zero.";
-}
 
 function validateDepartment(dept) {
     return new Promise((resolve, reject) => {
@@ -63,11 +48,10 @@ function newPrompt() {
             type: "input",
             message: "What is the overhead cost of the new deparment?",
             name: "cost",
-            validate: validateNumUnits,
-            filter: val => parseInt(val, 10),
+            validate: validation.integerGreaterThanZero,
         },
     ]).then((response) => {
-        addDepartment(response.department, response.cost);
+        addDepartment(response.department, parseInt(response.cost, 10));
     });
 }
 
