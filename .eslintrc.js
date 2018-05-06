@@ -14,5 +14,6 @@ module.exports = {
         "func-names": [0],
         "no-plusplus": [0],
         "no-lonely-if": [0],
+        "prefer-promise-reject-errors": [0],
     }
 };
