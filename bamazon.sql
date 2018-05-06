@@ -41,3 +41,32 @@ VALUES ("Leather Round Back Chair", "Home & Kitchen", 147.40, 3);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Portable Bluetooth Speakers", "Electronics", 16.89, 58);
+
+DROP TABLE IF EXISTS departments;
+CREATE TABLE departments (
+	department_id INTEGER AUTO_INCREMENT NOT NULL,
+    department_name VARCHAR(100),
+    over_head_costs INTEGER,
+    PRIMARY KEY (department_id)
+);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Garden & Outdoor", 400);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Pet Supplies", 200);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Clothing, Shoes & Jewelry", 1000);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Home & Kitchen", 1200);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Electronics", 1500);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Baby", 300);
+
+ALTER TABLE products
+ADD product_sales DECIMAL(10,2) DEFAULT 0;

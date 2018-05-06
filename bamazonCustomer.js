@@ -17,7 +17,7 @@ const productTable = new Table({
 });
 
 function buyProduct(id, numUnits) {
-    connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [numUnits, id], (err) => {
+    connection.query("UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + (price * ?) WHERE item_id = ?", [numUnits, numUnits, id], (err) => {
         if (err) throw err;
     });
     connection.end();
