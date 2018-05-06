@@ -1,6 +1,6 @@
 # Bamazon
 
-Bamazon is a CLI node-based Amazon-like storefront with three interfaces that include the following user options:
+Bamazon is a CLI node-based Amazon-like storefront with the following three interfaces and options. Click on the interface link to view a video of the expected behavior of that module:
 1. [Customer](videos/bamazonCustomer.mp4)
     1. Purchase a product
 1. [Manager](videos/bamazonManager.mp4)
